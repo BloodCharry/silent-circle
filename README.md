@@ -42,6 +42,7 @@ Silent Circle — Telegram‑сервис для деловых знакомст
 ### Backend
 ```bash
 cd backend
+pip install poetry
 poetry install
 poetry run uvicorn app.main:app --reload
 ```
