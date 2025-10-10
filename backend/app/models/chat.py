@@ -1,6 +1,7 @@
 from sqlalchemy import Boolean, ForeignKey, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from backend.app.models.base import Base
+from typing import Optional
+from app.models.base import Base # type: ignore
 
 
 class Chat(Base):
@@ -16,8 +17,8 @@ class Chat(Base):
 class ChatMember(Base):
     __tablename__ = "chat_members"
 
-    chat_id: Mapped = mapped_column(ForeignKey("chats.id"))
-    user_id: Mapped = mapped_column(ForeignKey("users.id"))
+    chat_id: Mapped[int] = mapped_column(ForeignKey("chats.id"))
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
 
     chat = relationship("Chat", back_populates="members")
     user = relationship("User", back_populates="chat_memberships")
@@ -26,8 +27,8 @@ class ChatMember(Base):
 class Message(Base):
     __tablename__ = "messages"
 
-    chat_id: Mapped = mapped_column(ForeignKey("chats.id"))
-    sender_id: Mapped = mapped_column(ForeignKey("users.id"))
+    chat_id: Mapped[int] = mapped_column(ForeignKey("chats.id"))
+    sender_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     content: Mapped[str] = mapped_column(Text)
 
     chat = relationship("Chat", back_populates="messages")

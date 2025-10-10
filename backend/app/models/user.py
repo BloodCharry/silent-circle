@@ -1,7 +1,8 @@
-from sqlalchemy import String, Enum, Text
+from sqlalchemy import String, Enum, Text, JSON  # ← добавлен импорт JSON
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 import enum
-from backend.app.models.base import Base
+from typing import Optional
+from app.models.base import Base  # type: ignore
 
 
 class UserStatus(str, enum.Enum):
@@ -23,11 +24,11 @@ class User(Base):
     telegram_id: Mapped[int] = mapped_column(unique=True, index=True)
     first_name: Mapped[str] = mapped_column(String(100))
     last_name: Mapped[str] = mapped_column(String(100))
-    status: Mapped[UserStatus]
-    about: Mapped[str | None] = mapped_column(Text, nullable=True)
-    interests: Mapped[dict | None] = mapped_column(nullable=True)  # JSONB
-    avatar_url: Mapped[str | None] = mapped_column(String, nullable=True)
-    role: Mapped[UserRole] = mapped_column(default=UserRole.user)
+    status: Mapped[UserStatus] = mapped_column(Enum(UserStatus))
+    about: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    interests: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+    avatar_url: Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    role: Mapped[UserRole] = mapped_column(Enum(UserRole), default=UserRole.user)
 
     # relations
     application = relationship("Application", back_populates="user", uselist=False)

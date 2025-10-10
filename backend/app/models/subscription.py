@@ -1,7 +1,9 @@
 from sqlalchemy import Enum, ForeignKey, DateTime, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 import enum
-from backend.app.models.base import Base
+from datetime import datetime
+from typing import Optional
+from app.models.base import Base # type: ignore
 
 
 class SubscriptionStatus(str, enum.Enum):
@@ -20,11 +22,11 @@ class SubscriptionPlan(str, enum.Enum):
 class Subscription(Base):
     __tablename__ = "subscriptions"
 
-    user_id: Mapped = mapped_column(ForeignKey("users.id"))
-    status: Mapped[SubscriptionStatus]
-    plan: Mapped[SubscriptionPlan]
-    started_at: Mapped
-    expires_at: Mapped
-    payment_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    status: Mapped[SubscriptionStatus] = mapped_column(Enum(SubscriptionStatus))
+    plan: Mapped[SubscriptionPlan] = mapped_column(Enum(SubscriptionPlan))
+    started_at: Mapped[datetime]
+    expires_at: Mapped[datetime]
+    payment_id: Mapped[Optional[str]] = mapped_column(String, nullable=True)
 
     user = relationship("User", back_populates="subscriptions")
