@@ -9,12 +9,15 @@ from aiogram.filters import Command
 from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
 
+from backend.app.api.v1 import users
+from backend.app.core.config import settings
+
 from dotenv import load_dotenv
 
 load_dotenv()
 
 # Settings
-API_TOKEN: str = os.environ["API_TOKEN"]
+API_TOKEN: str = os.environ["TELEGRAM_BOT_TOKEN"]
 bot = Bot(
     token=API_TOKEN,
     default=DefaultBotProperties(parse_mode=ParseMode.HTML)
@@ -23,6 +26,9 @@ dp = Dispatcher()
 
 # FastAPI
 app = FastAPI(title="Silent Circle API", version="0.1.0")
+
+# Подключаем API
+app.include_router(users.router, prefix=settings.API_V1_PREFIX + "/users", tags=["users"])
 
 
 @app.get("/health")
