@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import Optional
 import uuid
 from datetime import datetime
@@ -20,5 +20,4 @@ class ApplicationRead(ApplicationBase):
     reviewed_at: Optional[datetime]
     review_comment: Optional[str]
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
