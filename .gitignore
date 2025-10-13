@@ -1,8 +1,15 @@
+.venv
 venv
+
+.pytest_cache
 .env
 postgres_data/
 redis/
 backend/poetry.lock
+
+.mypy_cache
+
+
 
 Thumbs.db
 .DS_Store
