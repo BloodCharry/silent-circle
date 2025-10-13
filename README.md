@@ -69,6 +69,12 @@ docker-compose -f devops/compose/docker-compose.dev.yml up --build
 ```
 
 ## Тестирование
+- Тесты запускаются в изолированной среде с помощью Docker Compose. Для этого используется файл:
+devops/compose/docker-compose.test.yml
+- Почему не Testcontainers?
+На Windows 10 Testcontainers проявляют нестабильное поведение (падения, таймауты, проблемы с сетью). Поэтому мы перешли на проверенный и надёжный подход через docker-compose.
 ```bash
-pytest
+docker-compose -f devops/compose/docker-compose.test.yml up -d
+cd backend
+poetry run pytest tests -v
 ```
