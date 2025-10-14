@@ -1,8 +1,8 @@
-from sqlalchemy import String, Enum, Text, JSON  # ← добавлен импорт JSON
+from sqlalchemy import String, Enum, Text, JSON
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 import enum
-from typing import Optional
-from app.models.base import Base  # type: ignore
+from typing import Optional, Any
+from app.models.base import Base
 
 
 class UserStatus(str, enum.Enum):
@@ -26,7 +26,7 @@ class User(Base):
     last_name: Mapped[str] = mapped_column(String(100))
     status: Mapped[UserStatus] = mapped_column(Enum(UserStatus))
     about: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    interests: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+    interests: Mapped[Optional[dict[str, Any]]] = mapped_column(JSON, nullable=True)
     avatar_url: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     role: Mapped[UserRole] = mapped_column(Enum(UserRole), default=UserRole.user)
 

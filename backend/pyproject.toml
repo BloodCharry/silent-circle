@@ -56,6 +56,11 @@ pytest-dotenv = "^0.5.2"
 asyncio_mode = "auto"
 pythonpath = ["."]
 
+[tool.mypy]
+python_version = "3.11"
+strict = true
+explicit_package_bases = true
+
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"

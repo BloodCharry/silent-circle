@@ -1,9 +1,11 @@
 import os
 import logging
 from contextlib import asynccontextmanager
+from typing import AsyncGenerator
 from fastapi import FastAPI
-from app.api.v1 import users, applications  # type: ignore
-from app.core.config import settings  # type: ignore
+from app.api.v1 import users, applications
+from app.core.config import settings
+
 
 TESTING = os.environ.get("TESTING") == "1"
 
@@ -14,14 +16,14 @@ if not TESTING:
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     if TESTING:
         logging.info("Silent Circle backend started (TEST).")
         yield
         logging.info("Silent Circle backend stopped (TEST).")
     else:
         import asyncio
-        from app.db.session import init_engine  # type: ignore
+        from app.db.session import init_engine
         from aiogram import Bot, Dispatcher
         from aiogram.types import Message
         from aiogram.filters import Command
@@ -33,16 +35,16 @@ async def lifespan(app: FastAPI):
         dp = Dispatcher()
 
         @dp.message(Command("start"))
-        async def cmd_start(message: Message):
+        async def cmd_start(message: Message) -> None:
             await message.answer("Привет! Это Silent Circle.\nНажми кнопку ниже, чтобы перейти в приложение.")
 
-        async def start_bot():
+        async def start_bot() -> None:
             logging.info("Starting Telegram bot...")
             await dp.start_polling(bot)
 
         # --- startup ---
         init_engine()
-        asyncio.get_event_loop().create_task(start_bot())
+        asyncio.create_task(start_bot())
         logging.info("Silent Circle backend started.")
 
         try:
@@ -61,5 +63,5 @@ app.include_router(applications.router, prefix=f"{settings.API_V1_PREFIX}/applic
 
 
 @app.get("/health")
-async def health_check():
+async def health_check() -> dict[str, str]:
     return {"status": "ok"}

@@ -22,7 +22,7 @@ def upgrade() -> None:
     op.alter_column(
         'applications',
         'submitted_at',
-        server_default=sa.func.now(),
+        server_default=sa.text('NOW()'),
         existing_type=sa.DateTime(timezone=True),
         existing_nullable=False
     )

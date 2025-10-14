@@ -2,7 +2,7 @@ from pydantic import BaseModel, ConfigDict
 from typing import Optional
 import uuid
 from datetime import datetime
-from app.models.application import ApplicationStatus  # type: ignore
+from app.models.application import ApplicationStatus
 
 
 class ApplicationBase(BaseModel):

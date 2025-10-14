@@ -1,7 +1,7 @@
 from sqlalchemy import ForeignKey, SmallInteger, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import Optional
-from app.models.base import Base # type: ignore
+from app.models.base import Base
 
 
 class Feedback(Base):

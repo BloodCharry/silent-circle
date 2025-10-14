@@ -3,7 +3,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 import enum
 from datetime import datetime
 from typing import Optional
-from app.models.base import Base # type: ignore
+from app.models.base import Base
 
 
 class SubscriptionStatus(str, enum.Enum):

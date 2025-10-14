@@ -5,7 +5,7 @@ from sqlalchemy.sql import func
 import enum
 from datetime import datetime
 from typing import Optional
-from app.models.base import Base  # type: ignore
+from app.models.base import Base
 
 
 class ApplicationStatus(str, enum.Enum):

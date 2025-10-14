@@ -1,8 +1,8 @@
 from pydantic import BaseModel, ConfigDict
-from typing import Optional
+from typing import Optional, Any
 from uuid import UUID
 from datetime import datetime
-from app.models.user import UserStatus, UserRole  # type: ignore
+from app.models.user import UserStatus, UserRole
 
 
 class UserBase(BaseModel):
@@ -10,7 +10,7 @@ class UserBase(BaseModel):
     last_name: str
     status: UserStatus
     about: Optional[str] = None
-    interests: Optional[dict] = None
+    interests: Optional[dict[str, Any]] = None
     avatar_url: Optional[str] = None
 
 
