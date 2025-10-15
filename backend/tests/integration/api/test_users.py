@@ -1,6 +1,7 @@
 import uuid
 import pytest
 from httpx import AsyncClient
+from app.models.user import UserStatus, UserRole
 
 
 class TestUsersAPI:
@@ -10,10 +11,10 @@ class TestUsersAPI:
             "telegram_id": 123456789,
             "first_name": "Иван",
             "last_name": "Иванов",
-            "status": "student",
+            "status": UserStatus.student.value,
             "about": "Люблю читать",
             "interests": {"hobbies": ["books", "coding"]},
-            "role": "user"
+            "role": UserRole.user.value,
         }
         response = await client.post("/api/v1/users/", json=user_data)
         assert response.status_code == 200
@@ -40,8 +41,8 @@ class TestUsersAPI:
                 "telegram_id": 1000 + i,
                 "first_name": f"User{i}",
                 "last_name": "Test",
-                "status": "student",
-                "role": "user"
+                "status": UserStatus.student.value,
+                "role": UserRole.user.value,
             })
             users.append(resp.json())
 
