@@ -3,9 +3,8 @@ import logging
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 from fastapi import FastAPI
-from app.api.v1 import users, applications
+from app.api.v1 import users, applications, chats, subscriptions
 from app.core.config import settings
-
 
 TESTING = os.environ.get("TESTING") == "1"
 
@@ -60,6 +59,8 @@ app = FastAPI(title="Silent Circle API", version="0.1.0", lifespan=lifespan)
 # Роутеры
 app.include_router(users.router, prefix=f"{settings.API_V1_PREFIX}/users", tags=["users"])
 app.include_router(applications.router, prefix=f"{settings.API_V1_PREFIX}/applications", tags=["applications"])
+app.include_router(chats.router, prefix=f"{settings.API_V1_PREFIX}/chats", tags=["chats"])
+app.include_router(subscriptions.router, prefix=f"{settings.API_V1_PREFIX}/subscriptions", tags=["subscriptions"])
 
 
 @app.get("/health")
