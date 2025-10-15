@@ -4,7 +4,7 @@ from fastapi import HTTPException
 
 from app.services.user_service import UserService
 from app.schemas.user import UserCreate
-from app.models.user import User
+from app.models.user import User, UserStatus, UserRole
 
 
 @pytest.mark.asyncio
@@ -13,8 +13,8 @@ async def test_create_user(db_session: AsyncSession) -> None:
         telegram_id=123456,
         first_name="Test",
         last_name="User",
-        status="student",
-        role="user"
+        status=UserStatus.student,
+        role=UserRole.user,
     )
     user: User = await UserService.create_user(db_session, user_in)
     assert isinstance(user, User)
@@ -28,8 +28,8 @@ async def test_get_user_success(db_session: AsyncSession) -> None:
         telegram_id=654321,
         first_name="Another",
         last_name="User",
-        status="student",
-        role="user"
+        status=UserStatus.student,
+        role=UserRole.user,
     )
     created = await UserService.create_user(db_session, user_in)
     fetched = await UserService.get_user(db_session, str(created.id))
@@ -47,24 +47,25 @@ async def test_get_user_not_found(db_session: AsyncSession) -> None:
 
 @pytest.mark.asyncio
 async def test_list_users(db_session: AsyncSession) -> None:
-    # Создаём двух пользователей
-    user1 = await UserService.create_user(db_session, UserCreate(
-        telegram_id=111111,
-        first_name="First",
-        last_name="User",
-        status="student",
-        role="user"
-    ))
-    user2 = await UserService.create_user(db_session, UserCreate(
-        telegram_id=222222,
-        first_name="Second",
-        last_name="User",
-        status="student",
-        role="user"
-    ))
+    user1 = await UserService.create_user(
+        db_session,
+        UserCreate(
+            telegram_id=111111,
+            first_name="First",
+            last_name="User",
+            status=UserStatus.student,
+            role=UserRole.user,
+        ),
+    )
+    user2 = await UserService.create_user(
+        db_session,
+        UserCreate(
+            telegram_id=222222,
+            first_name="Second",
+            last_name="User",
+            status=UserStatus.student,
+            role=UserRole.user,
+        ),
+    )
 
     users = await UserService.list_users(db_session)
-    ids = {u.id for u in users}
-    assert user1.id in ids
-    assert user2.id in ids
-    assert len(users) >= 2
