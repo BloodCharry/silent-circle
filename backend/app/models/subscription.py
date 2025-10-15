@@ -25,8 +25,8 @@ class Subscription(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     status: Mapped[SubscriptionStatus] = mapped_column(Enum(SubscriptionStatus))
     plan: Mapped[SubscriptionPlan] = mapped_column(Enum(SubscriptionPlan))
-    started_at: Mapped[datetime]
-    expires_at: Mapped[datetime]
+    started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     payment_id: Mapped[Optional[str]] = mapped_column(String, nullable=True)
 
     user = relationship("User", back_populates="subscriptions")
