@@ -16,7 +16,7 @@ class TestSubscriptionsAPI:
             "first_name": "Sub",
             "last_name": "User",
             "status": "student",
-            "role": "user"
+            "role": "user",
         }
         response = await client.post("/api/v1/users/", json=user_data)
         assert response.status_code == 200
@@ -28,9 +28,9 @@ class TestSubscriptionsAPI:
             "status": "active",
             "plan": "monthly",
             "user_id": user["id"],
-            "started_at": datetime.now(UTC).isoformat(),
-            "expires_at": (datetime.now(UTC) + timedelta(days=30)).isoformat(),
-            "payment_id": "pay_123"
+            "started_at": datetime.now(tz=UTC).isoformat(),
+            "expires_at": (datetime.now(tz=UTC) + timedelta(days=30)).isoformat(),
+            "payment_id": "pay_123",
         }
         response = await client.post("/api/v1/subscriptions/", json=sub_data)
         assert response.status_code == 200
@@ -41,6 +41,9 @@ class TestSubscriptionsAPI:
         assert "id" in subscription
         assert subscription["plan"] == "monthly"
         assert subscription["status"] == "active"
+        assert "user_id" in subscription
+        assert "started_at" in subscription
+        assert "expires_at" in subscription
 
     async def test_get_subscription_not_found(self, client: AsyncClient) -> None:
         fake_id: str = "00000000-0000-0000-0000-000000000000"
@@ -62,8 +65,9 @@ class TestSubscriptionsAPI:
                 "status": "active",
                 "plan": plan,
                 "user_id": user["id"],
-                "started_at": datetime.now(UTC).isoformat(),
-                "expires_at": (datetime.now(UTC) + timedelta(days=30)).isoformat(),
+                "started_at": datetime.now(tz=UTC).isoformat(),
+                "expires_at": (datetime.now(tz=UTC) + timedelta(days=30)).isoformat(),
+                "payment_id": f"pay_{plan}",
             }
             resp = await client.post("/api/v1/subscriptions/", json=sub_data)
             assert resp.status_code == 200
