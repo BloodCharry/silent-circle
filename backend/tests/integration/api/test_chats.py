@@ -1,4 +1,3 @@
-import pytest
 from httpx import AsyncClient
 from typing import Any
 
@@ -9,6 +8,7 @@ class TestChatsAPI:
         response = await client.post("/api/v1/chats/", json=chat_data)
         assert response.status_code == 200
         data: dict[str, Any] = response.json()
+        assert isinstance(data, dict)
         assert "id" in data
         assert data["is_active"] is True
 
@@ -27,8 +27,9 @@ class TestChatsAPI:
 
     async def test_list_chats_with_data(self, client: AsyncClient) -> None:
         chats: list[dict[str, Any]] = []
-        for _ in range(2):
+        for i in range(2):
             resp = await client.post("/api/v1/chats/", json={"is_active": True})
+            assert resp.status_code == 200
             chats.append(resp.json())
 
         response = await client.get("/api/v1/chats/")
@@ -40,6 +41,7 @@ class TestChatsAPI:
     async def test_list_messages_empty(self, client: AsyncClient) -> None:
         # создаём чат
         resp = await client.post("/api/v1/chats/", json={"is_active": True})
+        assert resp.status_code == 200
         chat: dict[str, Any] = resp.json()
 
         # проверяем, что сообщений нет
