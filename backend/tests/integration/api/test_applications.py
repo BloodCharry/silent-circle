@@ -15,22 +15,21 @@ class TestApplicationsAPI:
             "status": UserStatus.student.value,
             "role": UserRole.user.value,
         })
+        assert user_resp.status_code == 200
         data = user_resp.json()
-        assert isinstance(data, dict), f"Expected dict, got {type(data)}"
+        assert "id" in data
         return data
 
     async def test_create_application_success(self, client: AsyncClient) -> None:
         user = await self._create_user(client, idx=0)
-        app_data = {
-            "user_id": user["id"],
-            "status": ApplicationStatus.pending.value,
-            "review_comment": None,
-        }
+        app_data = {"user_id": user["id"]}
         response = await client.post("/api/v1/applications/", json=app_data)
         assert response.status_code == 200
         data = response.json()
+        assert "id" in data
         assert data["user_id"] == user["id"]
         assert data["status"] == ApplicationStatus.pending.value
+        assert data["review_comment"] is None
 
     async def test_get_application_not_found(self, client: AsyncClient) -> None:
         fake_id = "00000000-0000-0000-0000-000000000000"
@@ -47,11 +46,7 @@ class TestApplicationsAPI:
         apps = []
         for i in range(2):
             user = await self._create_user(client, idx=i)
-            resp = await client.post("/api/v1/applications/", json={
-                "user_id": user["id"],
-                "status": ApplicationStatus.pending.value,
-                "review_comment": f"Test comment {i}",
-            })
+            resp = await client.post("/api/v1/applications/", json={"user_id": user["id"]})
             assert resp.status_code == 200
             apps.append(resp.json())
 
@@ -60,3 +55,4 @@ class TestApplicationsAPI:
         data = response.json()
         assert len(data) == 2
         assert {a["id"] for a in data} == {a["id"] for a in apps}
+        assert all(a["review_comment"] is None for a in data)
